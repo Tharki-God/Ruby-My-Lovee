@@ -27,6 +27,6 @@ the bot even though he just did had
 [2 Brain Cells.](https://open.spotify.com/track/5REla0Gx2SDDol7Vhr0gPu?si=dbe8681f892049b1)
 
 ## Authors
-- Coder [Ahlawat](https://discord.com/users/604309370301448203)
+- Coder: [Ahlawat](https://discord.com/users/604309370301448203)
 - Motivator : [His Wifey💖](https://discord.com/users/7014244263943209673)
 
