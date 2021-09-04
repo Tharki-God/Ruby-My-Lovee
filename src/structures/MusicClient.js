@@ -72,7 +72,7 @@ module.exports = class MusicClient extends Client {
         this.shoukaku
             .on("ready", (name, resumed) => this.logger.info(`${name} is now ready.${resumed ? " (Lavalink Reconnected Connection)": "(Lavalink New Connecttion)"}`))
             .on("disconnect", (name, players, moved) => this.logger.debug(`Lavalink ${name} disconnected.`, moved ? 'players have been moved' : 'players have been disconnected'))
-            .on("close", (name, code, reason) => {this.logger.error(`Lavalink ${name} closed. Code: ${code}. Reason: ${reason || 'No reason'}`) && this.shoukaku.players.forEach((player)=> {player.reconnect();});} )
+            .on("close", (name, code, reason) => this.logger.error(`Lavalink ${name} closed. Code: ${code}. Reason: ${reason || 'No reason'}`))
             .on("error", (name, error) => this.logger.error(`Encountered an error in node ${name}.`, error.stack))
             .on("debug", (name, reason) => this.logger.debug(`${reason || 'No reason'} (${name})`));
         
