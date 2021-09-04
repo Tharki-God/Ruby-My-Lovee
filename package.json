@@ -1,0 +1,52 @@
+{
+  "name": "ruby",
+  "version": "2.0.0",
+  "description": "bot with lavalink made to impress fiancee.",
+  "main": "Ruby.js",
+  "nodemonConfig": {
+    "ignore": [
+      "./database/*.json"
+    ]
+  },
+  "scripts": {
+    "start": "node Ruby.js"
+  },
+  "dependencies": {
+    "ascii-table": "0.0.9",
+    "capitalize": "^2.0.3",
+    "capitalize-first-letter": "^1.0.0",
+    "discord-together": "^1.1.62",
+    "discord.js": "^13.0.1",
+    "discord.js-buttons": "^1.0.0",
+    "dotenv": "^8.2.0",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "express-session": "^1.17.2",
+    "get-urls": "^10.0.0",
+    "lavasfy": "^2.3.0",
+    "lyrics-finder": "^21.7.0",
+    "moment": "^2.29.1",
+    "music-progress-bar": "^1.0.4",
+    "node-os-utils": "^1.3.5",
+    "nodemon": "^2.0.9",
+    "passport": "^0.4.1",
+    "passport-discord": "^0.1.4",
+    "pretty-ms": "^7.0.1",
+    "shoukaku": "^2.0.0",
+    "snowflake-util": "^1.0.1",
+    "socket.io": "^4.1.2",
+    "spotify-cover-art-api": "^4.1.1",
+    "spotify-cover-fetch": "^0.2.1",
+    "spotify-data": "0.0.4",
+    "spotify-url-info": "^2.2.3",
+    "string-progressbar": "^1.0.1",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "eslint": "^7.28.0",
+    "eslint-plugin-react": "^7.24.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
