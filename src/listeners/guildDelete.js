@@ -10,7 +10,7 @@ See ya Then IG
 If you stopped using me because of Some **bug** the Report it to: **<@!${process.env.OWNER_ID}>**`)
             .setAuthor("Thanks for Having me **ONCE**", guild.iconURL({ dynamic: true }), `https://discord.com/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot`)
             .setFooter(client.user.username,  client.user.displayAvatarURL({ dynamic: true }))
-            .setTimestamp()]});
+            .setTimestamp()]}).catch(()=> {return null;});
     }
 };
 
