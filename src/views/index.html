@@ -4,6 +4,15 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta name="viewport" content="width=device-width, initial-scale=0.9">
+	<meta property="og:site_name" content="Discord Music Bot">
+	<meta content="Ruby" property="og:title" />
+	<meta property="og:ttl" content="600">
+	  <meta content="The Discord Music Bot Made with Love [*]and a little bit Coding[*]" property="og:description" />
+	  <meta content="https://wife-ruby.ml" property="og:url" />
+	  <meta name="og:image" itemprop="image" content="logo.png">
+	<meta property="og:image:width" content="151">
+	  <meta property="og:image:height" content="151">
+	  <meta content="#7F00FF" data-react-helmet="true" name="theme-color" />
     <title>Ruby - Discord Music Bot</title>
 	<link rel="shortcut icon" type="image/png" href="icon.png" async/>
 
@@ -20,6 +29,10 @@
     <link rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/fontawesome.min.css"
     />
+	<link 
+	href="https://fonts.googleapis.com/css?family=Cookie" 
+	rel="stylesheet"
+	/>
   </head>
   <body>
     <section class="main">
@@ -55,16 +68,16 @@
 "Share your music tastes with your friends." ]'></span>
 </h1>
 					<br>
-                    <p>Ruby is the easiest way to play music in your server.<br>
+                    <p>Ruby is the easiest way to play music in your server.
+					<br>
 			An advanced music bot, supports Spotify, YouTube & more
             with Shuffling, Volume Control!</p>
-			<div style = "position:relative; left:200px; top:25px;"> <a href="https://discord.com/api/oauth2/authorize?client_id=843201958173212783&permissions=100003009&scope=bot%20applications.commands"><button class="btn btn-light">Add to Discord</button></div></a>
+			<div class = "invitef"> <a href="https://discord.com/api/oauth2/authorize?client_id=843201958173212783&permissions=100003009&scope=bot%20applications.commands"><button class="btn btn-light">Add to Discord</button></div></a>
                 </div>
                 <img src="logo.png" async />
-
             </div>
         </section>
-        <section></section>	  
+         
       <!-- End Hero -->
 
       <!-- Features -->
@@ -159,7 +172,7 @@
 															</thead>
 															<tbody id="music-commands-body"></tbody>
 														  </table>
-	  </div>
+	  
 												   </details>
 												   <details class="filter">
 													<summary>Filter Commands</summary>
@@ -250,11 +263,11 @@
 		<div class="strokeme">             
                     <h1>Ready to use Ruby Bot?</h1>
 				</div>
-				<div style = "position:relative; padding-top: 15px; padding-left: 250px; padding-bottom: 50px;"> <a href="https://discord.com/api/oauth2/authorize?client_id=843201958173212783&permissions=100003009&scope=bot%20applications.commands"><button class="btn btn-light btn-lg">Invite Bot</button></div></a>           
+				<div class = "invite"> <a href="https://discord.com/api/oauth2/authorize?client_id=843201958173212783&permissions=100003009&scope=bot%20applications.commands"><button class="btn btn-light btn-lg">Invite Bot</button></div></a>           
 		  </div>
 	  </div>
 	  <div class="footer">
-		<style>.bmc-button img{width: 27px !important;margin-bottom: 1px !important;box-shadow: none !important;border: none !important;vertical-align: middle !important;}.bmc-button{line-height: 36px !important;height:37px !important;text-decoration: none !important;display:inline-flex !important;color:#000000 !important;background-color:#ff0000 !important;border-radius: 3px !important;border: 1px solid transparent !important;padding: 1px 9px !important;font-size: 23px !important;letter-spacing: 0.6px !important;box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5) !important;-webkit-box-shadow: 0px 1px 2px 2px rgba(0, 0, 0, 0.5) !important;margin: 0 auto !important;font-family:'Cookie', cursive !important;-webkit-box-sizing: border-box !important;box-sizing: border-box !important;-o-transition: 0.3s all linear !important;-webkit-transition: 0.3s all linear !important;-moz-transition: 0.3s all linear !important;-ms-transition: 0.3s all linear !important;transition: 0.3s all linear !important;}.bmc-button:hover, .bmc-button:active, .bmc-button:focus {-webkit-box-shadow: 0px 1px 2px 2px rgba(0, 0, 0, 0.5) !important;text-decoration: none !important;box-shadow: 0px 1px 2px 2px rgba(0, 0, 0, 0.5) !important;opacity: 0.85 !important;color:#ffffff !important;}</style><link href="https://fonts.googleapis.com/css?family=Cookie" rel="stylesheet"><a class="bmc-button" target="_blank" href="/donate"><i class="fa fa-donate" style="margin-top:4px"></i><span style="margin-left:5px">Donate</span></a>
+		<div class="donate"><a class="bmc-button" target="_blank" href="/donate"><i class="fa fa-donate" style="margin-top:4px"></i><span style="margin-left:5px">Donate</span></a></div>
 		<div class="container">			
           <div class="row">
             <div class="col-md-12">
@@ -272,11 +285,13 @@
             </div>
           </div>
         </div>
-		<p align="right">				
+		<div class="credits">
+		<p>				
 			Hosted by:
-			<a href="//cp.something.host/" style="color: rgb(140, 0, 255)">Something.host</a> & <a href="//replit.com/" style="color: rgb(87, 89, 93)">Replit</a>
+			<a href="//cp.something.host/" class="something">Something.host</a> & <a href="//replit.com/" class="replit">Replit</a>
 		  <p>
       </div>
+	</div>
       <!-- End Footer -->
     </section>
     <script
@@ -285,7 +300,7 @@
       crossorigin="anonymous"
     ></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<script src="jquery.min.js.download"></script>
+	<script src="jquery.min.js"></script>
 			<script src="jquery.scrolly.min.js"></script>
 			<script src="jquery.scrollex.min.js"></script>
 			<script src="browser.min.js"></script>
