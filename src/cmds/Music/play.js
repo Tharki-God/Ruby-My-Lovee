@@ -65,7 +65,6 @@ module.exports = {
         }).then(msg => {if (msg.guild.purge) {setTimeout(() => msg.delete(), 10000);}});
         try {
             const result =  await music.load(util.isValidURL(query) ? query : `ytsearch:${query}`);
-            console.log(result.type)
             if (!result || !result.tracks.length) return ctx.channel.send({
                 embeds: [util.embed().setDescription("❌ | Couldn't find any results.")			
                     .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))

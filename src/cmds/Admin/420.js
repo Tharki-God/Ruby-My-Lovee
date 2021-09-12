@@ -25,7 +25,7 @@ module.exports = {
                 embeds: [util.embed().setDescription("❌ | BRUH you Don't Even Have Perms To Use this Command.")			
                     .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
                     .setTimestamp()]
-            });
+            }).then(msg => {if (msg.guild.purge) {setTimeout(() => msg.delete(), 10000);}});
     
 
         const selectMsg = await ctx.channel.send({

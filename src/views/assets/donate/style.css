@@ -1,0 +1,11 @@
+html,body{
+	line-height: 1.6em;
+	margin: auto;
+	overflow-x: hidden;
+	position: relative;
+	height:108%;
+	font-family:mulish,sans-serif;
+	-webkit-font-smoothing:antialiased;
+	background:#17181b;
+	}
+.product{padding-bottom:30px;padding-top:50px}

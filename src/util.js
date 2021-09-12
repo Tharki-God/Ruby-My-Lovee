@@ -350,7 +350,7 @@ class Util {
     }
     static progress(current, total, size = 16) {
         const percent = current / total * size;
-        const progbar = new Array(size).fill("▬");
+        const progbar = new Array(size).fill("=");
         progbar[Math.round(percent)] = "🔘";
         return {
             bar: progbar.join(""),

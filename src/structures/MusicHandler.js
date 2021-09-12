@@ -71,7 +71,8 @@ module.exports = class MusicHandler {
             channelId: voice.id,
             guildId: this.guild.id,
             shardId: this.guild.shardId,
-            deaf: true
+            deaf: true,
+            mute:false
         });
 
         this.player
@@ -84,10 +85,8 @@ module.exports = class MusicHandler {
                     };
                 }
                 let last  = messageez[this.guild.id].ID;                
-                
                 let time;
                 let volve;
-                
             if (this.guild.me.voice.serverMute) {
                 if (this.guild.me.hasPermission("MUTE_MEMBERS"))
                {this.guild.me.voice.setMute(false)} else {
@@ -140,14 +139,11 @@ module.exports = class MusicHandler {
                         if (err) this.client.logger.error(err.stack);
                     });} else if (this.textChannel && plymsg) { await plymsg.edit({embeds:[nope]}).catch(err => this.client.logger.error(err.stack)); }
             })
-            .on("end", async (data) => {						
+            .on("end", async (data) => {					
                 if (data.reason === "REPLACED") return;
                 this.previous = this.current;
-                this.current = null;
-
                 if (this.loop === 1 && !this.shouldSkipCurrent) this.queue.unshift(this.previous);
                 else if (this.loop === 2) this.queue.push(this.previous);
-
                 if (this.shouldSkipCurrent) this.shouldSkipCurrent = false;
                 let messageez = JSON.parse(fs.readFileSync("./database/messageez.json", "utf8"));
 				
@@ -168,6 +164,7 @@ module.exports = class MusicHandler {
 
                 let toogle  = status[this.guild.id].info;
                 if (!this.queue.length) {
+                    this.player.track = null;
                     if (!toogle) 
                     {
                         setTimeout(() => { 
@@ -207,19 +204,30 @@ module.exports = class MusicHandler {
                         if (this.guild.purge && toogle) setTimeout(() => plymsg.delete(), 10000);
                         
                     }	
-                    this.player.track = null;
                     this.client.logger.info(`${this.client.user.username}: Queue Completed Of ${this.guild.name}`);			
                     return;
-								
+			
                 }
                 this.start();
+            })
+            .on('exception', (e) => {
+                this.client.logger.error(e.error);
+                this.textChannel.send({ embeds: [util.embed()
+                    .setAuthor(' | Something went wrong with playing the Track', this.client.user.displayAvatarURL(), 'https://www.youtube.com/watch?v=dQw4w9WgXcQ')
+                    .setDescription(`Track - [${this.current.info.title}](${this.current.info.uri})\nReason - ${e ? e.error : 'No Reason'}`)
+                    .setFooter(this.current.requester.username,  this.current.requester.displayAvatarURL({ dynamic: true }))
+                .setTimestamp()] }).then(msg => {if (msg.guild.purge) {setTimeout(() => msg.delete(), 10000);}});
+            })
+            .on('closed', async (data) => {
+                console.log(data)
+                if (data.code === 4014) return this.destroy();
             })
             .on("update", ({ state }) => {
                 this.state = state;
             })
             .on("error", (e) => {             
                 this.client.logger.error(e.error);
-                process.exit;
+                this.destroy();
             });
     }
 
@@ -242,6 +250,7 @@ module.exports = class MusicHandler {
     }
 
     start() {
+        this.current = null;
         this.player?.playTrack(this.queue[0].track);
     }
    
