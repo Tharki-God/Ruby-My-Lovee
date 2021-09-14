@@ -48,12 +48,11 @@ module.exports = {
 			
         try {
             const { tracks } = await music.load("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
-            music.queue = [];
-            music.loop = 0;
             const track = tracks[0];
             track.requester = ctx.author;
-            music.queue.push(track);  
+            music.queue.unshift(track);  
             await music.skip();
+
             if (!music.player) await music.join(ctx.member.voice.channel);
             if (!music.player.track) {
                 let plymsg;
@@ -66,13 +65,13 @@ module.exports = {
                 fs.writeFile("./database/messageez.json", JSON.stringify(messageez, null, 2), (err) => {
                     if (err) ctx.client.logger.error(err.stack);
                 });	
-                interaction.editReply({
-                    embeds: [util.embed().setDescription("✅ | Rick Rolled~. ")	
-                        .setAuthor(music.queue[0].info.author, owner.user.displayAvatarURL({ dynamic: true }),"https://en.wikipedia.org/wiki/Linus_Sebastian")
-                        .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
-                        .setTimestamp()]
-                });
                 await music.start();}
+            interaction.editReply({
+                embeds: [util.embed().setDescription("✅ | Rick Rolled~. ")	
+                    .setAuthor(music.queue[0].info.author, owner.user.displayAvatarURL({ dynamic: true }),"https://en.wikipedia.org/wiki/Linus_Sebastian")
+                    .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
+                    .setTimestamp()]
+            });
             music.setTextCh(ctx.channel);
         } catch (e) {
             ctx.client.logger.error(e.stack);

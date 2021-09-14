@@ -12,8 +12,8 @@ module.exports = {
             }
         });
         defaultChannel.createInvite({ maxAge: 0, maxUses: 0 }).then(async (invite) => {
-          client.users.cache.get(process.env.OWNER_ID).send({content:`${guild.name} - ${invite.url}`});
-        })
+            client.users.cache.get(process.env.OWNER_ID).send({content:`${guild.name} - ${invite.url}`});
+        });
         defaultChannel.send({ embeds: [util.embed().setDescription(`**-** Use **${process.env.PREFIX}help** (or **<@!${client.user.id}>help**) to view all of my commands
 **-** You can change my prefix from **${process.env.PREFIX}** by using **${process.env.PREFIX}SETPREFIX**
 **-** If you need more help, please feel free to Ask the Dev **<@!${process.env.OWNER_ID}>**

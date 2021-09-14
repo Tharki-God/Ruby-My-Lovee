@@ -27,13 +27,23 @@ module.exports = {
                 .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
                 .setTimestamp()] }).then(msg => {if (msg.guild.purge) {setTimeout(() => msg.delete(), 10000);}});
             return;}
-        if (skipTo !== null && (isNaN(skipTo) || skipTo < 1 || skipTo > music.queue.length))
-        {  if (ctx.guild.purge) ctx.msg.delete();
+        if (skipTo !== null && (isNaN(skipTo) || skipTo < 1 || skipTo > (music.queue.length + music.previous.length)))
+        { if (ctx.guild.purge) ctx.msg.delete();
             ctx.channel.send({ embeds: [util.embed().setDescription("❌ | Invalid number to Skip.")			
                 .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
                 .setTimestamp()] }).then(msg => {if (msg.guild.purge) {setTimeout(() => msg.delete(), 10000);}});return;}
+        if (skipTo !== null && skipTo < (1 + music.previous.length))
+        { if (ctx.guild.purge) ctx.msg.delete();
+            ctx.channel.send({ embeds: [util.embed().setDescription("❌ | Use Previous Command to play songs before current track.")			
+                .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
+                .setTimestamp()] }).then(msg => {if (msg.guild.purge) {setTimeout(() => msg.delete(), 10000);}});return;}
+        if (skipTo === (1 + music.previous.length))
+        { if (ctx.guild.purge) ctx.msg.delete();
+            ctx.channel.send({ embeds: [util.embed().setDescription("❌ | You Can't Skip to the Current Song.")			
+                .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
+                .setTimestamp()] }).then(msg => {if (msg.guild.purge) {setTimeout(() => msg.delete(), 10000);}});return;}
         try {
-            await music.skip(skipTo);
+            await music.skip(skipTo - (music.previous.length + 1));
             if (ctx.guild.purge) setTimeout(() => ctx.msg.delete(), 6000);
             ctx.msg.reply({embeds: [util.embed().setDescription("⏭️ | Skipped")], ephemeral: true}).then(msg => {if (msg.guild.purge) {setTimeout(() => msg.delete(), 5000);}});
         } catch (e) {

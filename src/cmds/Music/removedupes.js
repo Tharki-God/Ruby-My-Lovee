@@ -3,11 +3,13 @@ const util = require("../../util");
 module.exports = {
     name: "removedupes",
     aliases: ["rdp"],
+    usage: "removedupes",
     description: "Removes duplicated tracks from the queue.",
     level: "Music",
     exec: (ctx) => {
         const { music } = ctx;
-        const seen = {};
+        const aseen = {};
+        const bseen = {};
 
         if (!music.player?.track) {		
             if (ctx.guild.purge) ctx.msg.delete();
@@ -15,7 +17,7 @@ module.exports = {
                 .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
                 .setTimestamp()]}).then(msg => {if (msg.guild.purge) {setTimeout(() => msg.delete(), 10000);}});
             return; }
-        if (!music.queue.length) 
+        if (!music.queue.length && !music.previous.length) 
         { if (ctx.guild.purge) ctx.msg.delete();
             ctx.channel.send({ embeds: [util.embed().setDescription("❌ | Queue is empty.")		
                 .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
@@ -37,9 +39,13 @@ module.exports = {
        
 
         for (const song of music.queue) {
-            if (seen[song.info.indentifier] === undefined) seen[song.info.indentifier] = song;
+            if (aseen[song.info.indentifier] === undefined) aseen[song.info.indentifier] = song;
         }
-        music.queue = Object.values(seen);
+        music.queue = Object.values(aseen);
+        for (const song of music.previous) {
+            if (bseen[song.info.indentifier] === undefined) bseen[song.info.indentifier] = song;
+        }
+        music.previous = Object.values(bseen);
         if (ctx.guild.purge) setTimeout(() => ctx.msg.delete(), 6000);
         ctx.respond({ embeds: [util.embed().setDescription("✅ | Removed all Dupes")] }).then(msg => {if (msg.guild.purge) {setTimeout(() => msg.delete(), 5000);}}).catch(e => e);
     }

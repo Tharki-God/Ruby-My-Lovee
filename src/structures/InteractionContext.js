@@ -17,7 +17,7 @@ module.exports = class InteractionContext {
 
     get channel() {
         if (channels[this.interaction.guild.id] && channels[this.interaction.guild.id].channel && this.interaction.guild.channels.cache.get(channels[this.interaction.guild.id].channel) !== undefined && this.interaction.channel.id !== channels[this.interaction.guild.id].channel) 
-        {return this.interaction.guild.channels.cache.get(channels[this.interaction.guild.id].channel)}
+        {return this.interaction.guild.channels.cache.get(channels[this.interaction.guild.id].channel);}
         else
         {return this.interaction.channel;}
     }
@@ -40,7 +40,8 @@ module.exports = class InteractionContext {
     }
 
     send(opt) {
-        return this.interaction.channel.send(opt);
+        if (!this.channel.permissionsFor(this.guild.me).has("SEND_MESSAGES") || !this.channel.permissionsFor(this.guild.me).has("EMBED_LINKS")) return this.interaction.editReply({ content: "I Don't Have Message Sending Perms in the channel.", allowedMentions: { repliedUser: false } });
+        return this.channel.send(opt);
     }
 
 };

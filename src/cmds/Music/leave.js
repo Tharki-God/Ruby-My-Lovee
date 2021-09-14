@@ -8,9 +8,9 @@ module.exports = {
     description: ["Leave Voice Chat. (•_•)"],
     exec: async (ctx) => {
         const { music } = ctx;
-        if (!music.player?.track) {		
+        if (!ctx.guild.me.voice.channel) {		
             if (ctx.guild.purge) ctx.msg.delete();
-            ctx.channel.send({ embeds:[util.embed().setDescription("❌ | Currently not playing anything.")		
+            ctx.channel.send({ embeds:[util.embed().setDescription("❌ | Currently not in Any VC.")		
                 .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
                 .setTimestamp()]}).then(msg => {if (msg.guild.purge) {setTimeout(() => msg.delete(), 10000);}});
             return; }

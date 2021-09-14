@@ -27,7 +27,7 @@ module.exports = {
                 .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
                 .setTimestamp()]}).then(msg => {if (msg.guild.purge) {setTimeout(() => msg.delete(), 10000);}});
             return;}
-        if (!music.queue.length) {
+        if (!music.queue.length && !music.previous.length) {
             if (ctx.guild.purge) ctx.msg.delete();
             ctx.channel.send({ embeds:[util.embed().setDescription("❌ | Queue is empty.")			
                 .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
@@ -35,7 +35,12 @@ module.exports = {
             return;}
 
         try {
-            music.queue.splice(0, 1);	         
+            let first = music.queue[0];
+            music.queue = [];
+            music.queue.push(first);	
+            let last = music.previous[0];
+            music.previous = [];
+            music.previous.push(last);	         
             if (ctx.guild.purge) setTimeout(() => ctx.msg.delete(), 6000);
             ctx.respond({
                 embeds: [util.embed().setDescription("🧹 | Cleared Queue")]

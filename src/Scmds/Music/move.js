@@ -39,7 +39,7 @@ module.exports = {
                 .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
                 .setTimestamp()]});
             return;}
-        if (!music.queue.length) {
+        if (!music.queue.length && !music.previous.length) {
             if (ctx.guild.purge) ctx.msg.delete();
             interaction.editReply({ embeds:[util.embed().setDescription("❌ | Queue is empty.")			
                 .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
@@ -48,16 +48,24 @@ module.exports = {
 
        
 
-        if (from === to || (isNaN(from) || from < 1 || from > music.queue.length) || (isNaN(to) || to < 1 || to > music.queue.length)) {
+        if (from === to || (isNaN(from) || from < 1 || from > (music.previous.length + music.queue.length)) || (isNaN(to) || to < 1 || to > (music.previous.length + music.queue.length))) {
             interaction.editReply({ embeds: [util.embed().setDescription("❌ | Number is invalid or exceeds queue length.")
                 .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
                 .setTimestamp()]
             });
             return;}
+        if (from <= (music.previous.length) || to <= (music.previous.length))
+            return interaction.editReply({ embeds: [util.embed().setDescription("❌ | You can not Move already Played Songs.")			
+                .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
+                .setTimestamp()] });
+        if (from === (music.previous.length + 1) || to === (music.previous.length + 1))
+            return interaction.editReply({ embeds: [util.embed().setDescription("❌ | You can not Move to/from Current Song Songs.")			
+                .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
+                .setTimestamp()] });
 
-        const moved = music.queue[from - 1];
+        const moved = music.queue[(from - (music.previous.length + 1)) - 1];
 
-        util.moveArrayElement(music.queue, from - 1, to - 1);
+        util.moveArrayElement(music.queue, (from - (music.previous.length + 1)) - 1, (to - (music.previous.length + 1)) - 1);
         interaction.editReply({ embeds: [util.embed().setDescription(`✅ | Moved **${moved.info.title}** to \`${to}\`.`)
             .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
             .setTimestamp()]

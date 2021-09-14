@@ -7,14 +7,13 @@ module.exports = {
     name: "messageCreate",
     exec: async (client, msg) => {			
         if (!msg.guild || msg.author.bot || msg.webhookId) return;
-        if (!msg.channel.permissionsFor(msg.guild.me).has('SEND_MESSAGES')) return;
-        
-        if (!msg.channel.guild) return msg.reply({ content: 'I can\'t execute commands inside DMs! Please run this command in a server.', allowedMentions: { repliedUser: false } }).catch(() => {return null;});;
-        if (msg.channel.type === 'DM') {
+        if (!msg.channel.permissionsFor(msg.guild.me).has("SEND_MESSAGES")) return;        
+        if (!msg.channel.guild) return msg.reply({ content: "I can't execute commands inside DMs! Please run this command in a server.", allowedMentions: { repliedUser: false } }).catch(() => {return null;});
+        if (msg.channel.type === "DM") {
             let embed = util.embed()
-                .setColor('RED')
-                .setDescription('This command can only be run in a server!');
-            return msg.reply({ embeds: [embed], allowedMentions: { repliedUser: false } }).catch(() => {return null;});;
+                .setColor("RED")
+                .setDescription("This command can only be run in a server!");
+            return msg.reply({ embeds: [embed], allowedMentions: { repliedUser: false } }).catch(() => {return null;});
         }
         let channels = JSON.parse(fs.readFileSync("./database/channels.json", "utf8"));
         if (channels[msg.guild.id] && channels[msg.guild.id].channel && await msg.guild.channels.cache.get(channels[msg.guild.id].channel) !== undefined && msg.channel.id !== channels[msg.guild.id].channel) return;
@@ -36,9 +35,9 @@ module.exports = {
             };
         }
         msg.guild.purge = purge[msg.guild.id].status;
-        if (msg.guild.purge && !msg.channel.permissionsFor(msg.guild.me).has('MANAGE_MESSAGES')) {
-msg.channel.send({ content: "Purge is On for Guild, Please give me Manage message Perms so I can execute the purge when needed.", allowedMentions: { repliedUser: false } })
-msg.guild.purge = false
+        if (msg.guild.purge && !msg.channel.permissionsFor(msg.guild.me).has("MANAGE_MESSAGES")) {
+            msg.channel.send({ content: "Purge is On for Guild, Please give me Manage message Perms so I can execute the purge when needed.", allowedMentions: { repliedUser: false } });
+            msg.guild.purge = false;
         }
         let prefix  = prefixes[msg.guild.id].prefix;
         const senpai = `<@!${client.user.id}>`;
@@ -53,7 +52,7 @@ msg.guild.purge = false
         const cmd = client.cmds.get(cmdName) || client.cmds.find(c => c.aliases && c.aliases.includes(cmdName));	
 	
         if (cmd) {
-            if (!msg.channel.permissionsFor(msg.guild.me).has('EMBED_LINKS')) return msg.channel.send({ content: 'I can\'t execute commands With these perms! Ask someone to Get me Embed Link Perms in this channel so That I use this command here.', allowedMentions: { repliedUser: false } });
+            if (!msg.channel.permissionsFor(msg.guild.me).has("EMBED_LINKS")) return msg.channel.send({ content: "I can't execute commands With these perms! Ask someone to Get me Embed Link Perms in this channel so That I use this command here.", allowedMentions: { repliedUser: false } });
             if (msg.author.id !== process.env.OWNER_ID){
                 if(!cooldowns.has(cmd.name)){
                     cooldowns.set(cmd.name, new Collection());

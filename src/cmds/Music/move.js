@@ -45,16 +45,24 @@ module.exports = {
             }).then(msg => {if (msg.guild.purge) {setTimeout(() => msg.delete(), 10000);}});
             return;}
 
-        if (from === to || (isNaN(from) || from < 1 || from > music.queue.length) || (isNaN(to) || to < 1 || to > music.queue.length)) {
+        if (from === to || (isNaN(from) || from < 1 || from > (music.previous.length + music.queue.length)) || (isNaN(to) || to < 1 || to > (music.previous.length + music.queue.length))) {
             ctx.channel.send({ embeds: [util.embed().setDescription("❌ | Number is invalid or exceeds queue length.")
                 .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
                 .setTimestamp()]
             }).then(msg => {if (msg.guild.purge) {setTimeout(() => msg.delete(), 10000);}});
             return;}
+        if (from <= (music.previous.length) || to <= (music.previous.length))
+            return ctx.channel.send({ embeds: [util.embed().setDescription("❌ | You can not Move already Played Songs.")			
+                .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
+                .setTimestamp()] }).then(msg => {if (msg.guild.purge) {setTimeout(() => msg.delete(), 10000);}});
+        if (from === (music.previous.length + 1) || to === (music.previous.length + 1))
+            return ctx.channel.send({ embeds: [util.embed().setDescription("❌ | You can not Move to/from Current Song Songs.")			
+                .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
+                .setTimestamp()] }).then(msg => {if (msg.guild.purge) {setTimeout(() => msg.delete(), 10000);}});
 
-        const moved = music.queue[from - 1];
+        const moved = music.queue[(from - (music.previous.length + 1)) - 1];
 
-        util.moveArrayElement(music.queue, from - 1, to - 1);
+        util.moveArrayElement(music.queue, (from - (music.previous.length + 1)) - 1, (to - (music.previous.length + 1)) - 1);
         ctx.channel.send({ embeds: [util.embed().setDescription(`✅ | Moved **${moved.info.title}** to \`${to}\`.`)
             .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
             .setTimestamp()]

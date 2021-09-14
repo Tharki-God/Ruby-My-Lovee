@@ -7,14 +7,15 @@ module.exports = {
     level: "Music",
     exec: (ctx) => {
         const { interaction, music } = ctx;
-        const seen = {};
+        const aseen = {};
+        const bseen = {};
 
         if (!music.player?.track) {		
             interaction.editReply({ embeds:[util.embed().setDescription("❌ | Currently not playing anything.")		
                 .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
                 .setTimestamp()]}).then(msg => {if (msg.guild.purge) {setTimeout(() => msg.delete(), 10000);}});
             return; }
-        if (!music.queue.length) 
+        if (!music.queue.length && !music.previous.length) 
         { interaction.editReply({ embeds: [util.embed().setDescription("❌ | Queue is empty.")		
             .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
             .setTimestamp()] }).then(msg => {if (msg.guild.purge) {setTimeout(() => msg.delete(), 10000);}});
@@ -33,9 +34,13 @@ module.exports = {
        
 
         for (const song of music.queue) {
-            if (seen[song.info.indentifier] === undefined) seen[song.info.indentifier] = song;
+            if (aseen[song.info.indentifier] === undefined) aseen[song.info.indentifier] = song;
         }
-        music.queue = Object.values(seen);
+        music.queue = Object.values(aseen);
+        for (const song of music.previous) {
+            if (bseen[song.info.indentifier] === undefined) bseen[song.info.indentifier] = song;
+        }
+        music.previous = Object.values(bseen);
         interaction.editReply({ embeds: [util.embed().setDescription("✅ | Removed all Dupes")] }).catch(e => e);
     }
 };

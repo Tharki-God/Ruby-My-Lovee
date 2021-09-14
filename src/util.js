@@ -57,30 +57,31 @@ class Util {
             .on("collect", async (interaction) => {
                 await interaction.deferUpdate();
                 if (interaction.user.id === author.id) {
-                const emoji = interaction.customId; 
-                if (emoji === this.paginationEmojis[0]) (currPage = 0);
-                if (emoji === this.paginationEmojis[1]) currPage--;
-                if (emoji === this.paginationEmojis[2]) {
-                    await interaction.editReply({ components: [new MessageActionRow().addComponents(...interaction.message.components[0].components.map(x => x.setDisabled(true)))] });
-                    return;
-                }
-                if (emoji === this.paginationEmojis[3]) currPage++;
-                if (emoji === this.paginationEmojis[4]) (currPage = (contents.length - 1));
-                currPage = ((currPage % contents.length) + contents.length) % contents.length;
-                if (type === "queue"){
-                    const music = interaction.client.musics.get(interaction.guild.id);
-                    const queue = music.queue.map((t, i) => `\`${++i}.\` **${t.info.title}** ${t.requester}`);      
-                    const ilive = music.queue.some(track => track.info.isStream);
-                    const embed = interaction.message.embeds[0]
-                        .setAuthor(` |  ${interaction.guild.name} Music Queue`, interaction.guild.iconURL({ dynamic: true }))      
-                        .setThumbnail("https://cdn.discordapp.com/attachments/879114142458478603/879114169813708860/thumb-1920-1010992.png")
-                        .setImage("https://cdn.discordapp.com/attachments/879114142458478603/879114878013550612/e0b.gif")      
-                        .setDescription(`🔊 Now Playing: \n${music.current.info.isStream ? "[**Live**<a:source:845082952303771658>]" : ""}[${music.current.info.title}](${music.current.info.uri}) [${music.current.info.isStream ? "Ask the Streamer how much left :)" : this.millisToDuration(music.current.info.length - music.player.position)} Left]\n${music.current.info.isStream ? "" : `${porgressBar({currentPositon:music.player.position /1,endPositon:music.current.info.length,width:16,barStyle:"=",currentStyle:"🔘"}, {format:" [ <bar> ] <precent> <%>"})}`}\n🔊Up Next:\n${contents == "" ? " No other tracks here" : "" + contents[currPage]}`)    
-                        .setFooter(`Page ${currPage + 1}/${contents.length === 0 ? "1" : contents.length} | Track's in Queue: ${queue.length === 0 ? "1" :queue.length} | ${ilive ? "The Queue Include Live Tracks So Length is Infinite RN": `Total Length: ${this.millisToDuration(music.queue.reduce((prev, curr) => prev + curr.info.length, 0) + (music.current.info.length - music.player.position))}`}`);
+                    const emoji = interaction.customId; 
+                    if (emoji === this.paginationEmojis[0]) (currPage = 0);
+                    if (emoji === this.paginationEmojis[1]) currPage--;
+                    if (emoji === this.paginationEmojis[2]) {
+                        await interaction.editReply({ components: [new MessageActionRow().addComponents(...interaction.message.components[0].components.map(x => x.setDisabled(true)))] });
+                        return;
+                    }
+                    if (emoji === this.paginationEmojis[3]) currPage++;
+                    if (emoji === this.paginationEmojis[4]) (currPage = (contents.length - 1));
+                    currPage = ((currPage % contents.length) + contents.length) % contents.length;
+                    if (type === "queue"){
+                        const music = interaction.client.musics.get(interaction.guild.id);
+                        const queue = music.queue.map((t, i) => `\`${++i}.\` **${t.info.title}** ${t.requester}`);      
+                        const ilive = music.queue.some(track => track.info.isStream);
+                        const embed = interaction.message.embeds[0]
+                            .setAuthor(` |  ${interaction.guild.name} Music Queue`, interaction.guild.iconURL({ dynamic: true }))      
+                            .setThumbnail("https://cdn.discordapp.com/attachments/879114142458478603/879114169813708860/thumb-1920-1010992.png")
+                            .setImage("https://cdn.discordapp.com/attachments/879114142458478603/879114878013550612/e0b.gif")      
+                            .setDescription(`🔊 Now Playing: \n${music.current.info.isStream ? "[**Live**<a:source:845082952303771658>]" : ""}[${music.previous.length + 1}. ${music.current.info.title}](${music.current.info.uri}) [${music.current.info.isStream ? "Ask the Streamer how much left :)" : this.millisToDuration(music.current.info.length - music.player.position)} Left]\n${music.current.info.isStream ? "" : `${porgressBar({currentPositon:music.player.position ? music.player.position /1 : 0 ,endPositon:music.current.info.length,width:16,barStyle:"=",currentStyle:"🔘"}, {format:" [ <bar> ] <precent> <%>"})}`}\n🔊Queue:\n${contents == "" ? " No other tracks here" : "" + contents[currPage]}`)
+                            .setFooter(`Page ${currPage + 1}/${contents.length === 0 ? "1" : contents.length} | Track's in Queue: ${queue.length === 0 ? "1" :queue.length} | ${ilive ? "The Queue Include Live Tracks So Length is Infinite RN": `Total Length: ${this.millisToDuration(music.queue.reduce((prev, curr) => prev + curr.info.length, 0) + (music.current.info.length - music.player.position))}`}`)
+                            .setTimestamp();
                 
-                    await interaction.editReply({
-                        embeds: [embed],
-                        components:
+                        await interaction.editReply({
+                            embeds: [embed],
+                            components:
                     contents.length > 1
                         ? [
                             new MessageActionRow()
@@ -94,15 +95,16 @@ class Util {
                                 )
                         ]
                         : []
-                    });} else if (type === "lyrics"){
+                        });} else if (type === "lyrics"){
                        
-                    const nah = interaction.message.embeds[0]     
-                        .setDescription(contents[currPage])    
-                        .setFooter(`Page ${currPage + 1} of ${contents.length}.`, interaction.user.displayAvatarURL({dynamic:true}));
+                        const nah = interaction.message.embeds[0]     
+                            .setDescription(contents[currPage])    
+                            .setFooter(`Page ${currPage + 1} of ${contents.length}.`, interaction.user.displayAvatarURL({dynamic:true}))
+                            .setTimestamp();
                     
-                    await interaction.editReply({
-                        embeds: [nah],
-                        components:
+                        await interaction.editReply({
+                            embeds: [nah],
+                            components:
                         contents.length > 1
                             ? [
                                 new MessageActionRow()
@@ -116,11 +118,11 @@ class Util {
                                     )
                             ]
                             : []
-                    });}
+                        });}
                 } else {await interaction.channel.send({
                     embeds: [this.embed().setDescription("❌ | Bitch Those buttons Ain't for you.")			
-                    .setFooter(interaction.user.username,  interaction.user.displayAvatarURL({ dynamic: true }))
-                    .setTimestamp()]                
+                        .setFooter(interaction.user.username,  interaction.user.displayAvatarURL({ dynamic: true }))
+                        .setTimestamp()]                
                 });}
                 this.pagination(msg, author, contents, type, currPage);
             } 
@@ -172,11 +174,8 @@ class Util {
                         .setTimestamp()], ephemeral: true}).then(msg => {if (msg.guild.purge) {setTimeout(() => msg.delete(), 10000);}});
 				
                 if (emoji === this.controlsEmojis[0]) {
-                    if (!music.previous) return; 
-                    if (music.previous === music.current) return; 
-                    music.queue.unshift(music.previous);
-                    music.skip();
-                    music.queue.unshift(music.previous);
+                    if (!music.previous.length) return; 
+                    music.last();
                     msg.channel.send({ embeds: [this.embed().setDescription("⏮️ | Repeated")], ephemeral: true}).then(msg => {if (msg.guild.purge) {setTimeout(() => msg.delete(), 10000);}});
                     return;}
                 if (emoji === this.controlsEmojis[1]) {
@@ -312,13 +311,11 @@ class Util {
                 }
                 if (emoji === this.controlsEmojis[8]) try {
                     let owner = await msg.guild.fetchOwner(); 
-                    const {tracks} = await music.load("https://www.youtube.com/watch?v=dQw4w9WgXcQ");			
-                    music.queue = [];
-                    music.loop = 0;
+                    const {tracks} = await music.load("https://www.youtube.com/watch?v=dQw4w9WgXcQ");	
                     const track = tracks[0];
                     track.requester = owner.user;
-                    music.queue.push(track);  
-                    await music.skip();	            
+                    music.queue.unshift(track);  
+                    await music.skip();		          
                     return;
                 } catch (e) {
                     msg.client.logger.error(`An error occured: ${e.message}.`);		

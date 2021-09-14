@@ -1,12 +1,13 @@
 const util = require("../../util");
 
+
 module.exports = {
-    name: "shuffle",
-    type: "CHAT_INPUT",
+    name: "replay",
     level: "Music",
-    description: "Shuffles The Songs in Queue Once",
+    type: "CHAT_INPUT",
+    description: "Replay the current song from start.",
     exec: async (ctx) => {
-        const { music, interaction } = ctx;      
+        const { interaction, music } = ctx;
         if (!music.player?.track) {		
             interaction.editReply({ embeds:[util.embed().setDescription("❌ | Currently not playing anything.")		
                 .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
@@ -22,17 +23,22 @@ module.exports = {
                 .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
                 .setTimestamp()]});
             return;}
-        if (!music.queue.length && !music.previous.length) {
-            interaction.editReply({ embeds:[util.embed().setDescription("❌ | Queue is empty.")			
+
+        if (!music.current.info.isSeekable) {
+            interaction.editReply({ embeds:[util.embed().setDescription("❌ | Current track isn't seekable.")			
                 .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
                 .setTimestamp()]});
             return;}
 
-        music.queue = util.shuffleArray(music.queue);
-        music.previous = util.shuffleArray(music.previous);
-        interaction.editReply({embeds: [util.embed().setDescription("Use Queue Command to see changes.")		
-            .setFooter("Use Queue Command to see changes.")]});
+     
 
-       
+        try {
+            await music.player.seekTo(0);
+            interaction.editReply({ embeds:[util.embed().setDescription(`✅ | Playing ${music.current.info.title} From Start}.`)			
+                .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
+                .setTimestamp()]});
+        } catch (e) {
+            ctx.client.logger.error(`An error occured: ${e.message}.`);
+        }
     }
 };

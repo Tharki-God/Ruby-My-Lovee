@@ -7,9 +7,10 @@ module.exports = class MusicHandler {
     /** @param {import("discord.js").Guild} guild */
     constructor(guild) {
         this.guild = guild;
-        this.previous = null;
+        this.previous = [];
         this.current = null;
         this.queue = [];
+        this.skips = [];
         this.loop = 0;
         this.filters = {
             doubleTime: false,
@@ -22,6 +23,7 @@ module.exports = class MusicHandler {
         /** @type {import("discord.js").TextChannel|null} */
         this.textChannel = null;
         this.shouldSkipCurrent = false;
+        this.shouldAddToPrevious = true;
         this.state = null;
     }
 
@@ -52,7 +54,7 @@ module.exports = class MusicHandler {
 
     reset() {
         this.loop = 0;
-        this.previous = null;
+        this.previous = [];
         this.current = null;
         this.queue = [];
         this.textChannel = null;
@@ -87,15 +89,15 @@ module.exports = class MusicHandler {
                 let last  = messageez[this.guild.id].ID;                
                 let time;
                 let volve;
-            if (this.guild.me.voice.serverMute) {
-                if (this.guild.me.hasPermission("MUTE_MEMBERS"))
-               {this.guild.me.voice.setMute(false)} else {
-                if (!this.textChannel.permissionsFor(this.guild.me).has('SEND_MESSAGES')) return;
-                this.textChannel.send(util.embed().setDescription(`❌ | I am Server Muted. Either Give me Mute Members perms or Unmute me yourself.`)			
-               .setFooter(this.current.requester.username,  this.current.requester.displayAvatarURL({ dynamic: true }))
-               .setTimestamp())}
-            }
-            if (!this.textChannel.permissionsFor(this.guild.me).has('SEND_MESSAGES')) return;
+                if (this.guild.me.voice.serverMute) {
+                    if (this.guild.me.hasPermission("MUTE_MEMBERS"))
+                    {this.guild.me.voice.setMute(false);} else {
+                        if (!this.textChannel.permissionsFor(this.guild.me).has("SEND_MESSAGES")) return;
+                        this.textChannel.send(util.embed().setDescription("❌ | I am Server Muted. Either Give me Mute Members perms or Unmute me yourself.")			
+                            .setFooter(this.current.requester.username,  this.current.requester.displayAvatarURL({ dynamic: true }))
+                            .setTimestamp());}
+                }
+                if (!this.textChannel.permissionsFor(this.guild.me).has("SEND_MESSAGES")) return;
                 if (!this.current.info.isStream) { time = `${util.millisToDuration(this.current.info.length)} Mins`; } else if (this.current.info.isStream) {time= "**N/A | Live**<a:source:845082952303771658>"; }
                 const modes = ["None", "Single Track", "Queue"];
                 if (this.volume <= 0) {volve = `🔇 | ${this.volume}%`;} else if (101 <= this.volume) {volve = `🔊 | ${this.volume}%`;} else {volve = `💬 | ${this.volume}%`;} 
@@ -112,7 +114,7 @@ module.exports = class MusicHandler {
                     .setFooter(this.current.requester.username, this.current.requester.displayAvatarURL({ dynamic: true }))
                     .setTimestamp();
 		
-                if (this.previous && this.previous !== this.current) {nope.addField("Previously Played", `[${this.previous.info.title}](${this.previous.info.uri})`, true);}
+                if (this.previous[0] && this.previous[0] !== this.current) {nope.addField("Previously Played", `[${this.previous[0].info.title}](${this.previous[0].info.uri})`, true);}
                 if (this.queue[0]) {
                     nope.addField("Next to Play", `[${this.queue[0].info.title}](${this.queue[0].info.uri})`, true);}
 
@@ -141,9 +143,11 @@ module.exports = class MusicHandler {
             })
             .on("end", async (data) => {					
                 if (data.reason === "REPLACED") return;
-                this.previous = this.current;
-                if (this.loop === 1 && !this.shouldSkipCurrent) this.queue.unshift(this.previous);
-                else if (this.loop === 2) this.queue.push(this.previous);
+                if (this.shouldAddToPrevious) this.previous.unshift(this.current);
+                this.shouldAddToPrevious = true;
+                this.current = null;
+                if (this.loop === 1 && !this.shouldSkipCurrent) this.queue.unshift(this.previous.shift());
+                else if (this.loop === 2) this.queue.push(this.previous.shift());
                 if (this.shouldSkipCurrent) this.shouldSkipCurrent = false;
                 let messageez = JSON.parse(fs.readFileSync("./database/messageez.json", "utf8"));
 				
@@ -168,22 +172,22 @@ module.exports = class MusicHandler {
                     if (!toogle) 
                     {
                         setTimeout(() => { 
-                            if (!this.queue.length && this.player && !this.player.track)  
-                                if (plymsg) {                       
-                                    plymsg.edit({embeds:[util.embed().setDescription("Nothing was Played So I left, Let me Stay Forever by Using 24/7 Command.")
-                                        .setAuthor("🈵 | I am no More" , this.client.user.displayAvatarURL())
-                                        .setFooter(this.guild.name, this.guild.iconURL({ dynamic: true }))
-                                        .setTimestamp()]}),
-                                    plymsg.reactions.removeAll();
-                                    if (this.guild.purge)  {messageez[this.guild.id] = {
-                                        ID: ""
-                                    };	
-                                    fs.writeFile("./database/messageez.json", JSON.stringify(messageez, null, 2), (err) => {
-                                        if (err) this.client.logger.error(err.stack);
-                                    });}
-                                    if (this.guild.purge) setTimeout(() => plymsg.delete(), 25000);	}                                                              
+                            if (!this.queue.length && !this.current && this.player && !this.player.track)  
+                            { if (plymsg) {                       
+                                plymsg.edit({embeds:[util.embed().setDescription("Nothing was Played So I left, Let me Stay Forever by Using 24/7 Command.")
+                                    .setAuthor("🈵 | I am no More" , this.client.user.displayAvatarURL())
+                                    .setFooter(this.guild.name, this.guild.iconURL({ dynamic: true }))
+                                    .setTimestamp()]}),
+                                plymsg.reactions.removeAll();
+                                if (this.guild.purge)  {messageez[this.guild.id] = {
+                                    ID: ""
+                                };	
+                                fs.writeFile("./database/messageez.json", JSON.stringify(messageez, null, 2), (err) => {
+                                    if (err) this.client.logger.error(err.stack);
+                                });}
+                                if (this.guild.purge) setTimeout(() => plymsg.delete(), 25000);	}                                                              
                             this.node.leaveChannel(this.guild.id); 
-                            this.reset();      
+                            this.reset(); }     
                         }, 2700000); 
                     }
                     
@@ -210,21 +214,21 @@ module.exports = class MusicHandler {
                 }
                 this.start();
             })
-            .on('exception', (e) => {
+            .on("exception", (e) => {
                 this.client.logger.error(e.error);
                 this.textChannel.send({ embeds: [util.embed()
-                    .setAuthor(' | Something went wrong with playing the Track', this.client.user.displayAvatarURL(), 'https://www.youtube.com/watch?v=dQw4w9WgXcQ')
-                    .setDescription(`Track - [${this.current.info.title}](${this.current.info.uri})\nReason - ${e ? e.error : 'No Reason'}`)
+                    .setAuthor(" | Something went wrong with playing the Track", this.client.user.displayAvatarURL(), "https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+                    .setDescription(`Track - [${this.current.info.title}](${this.current.info.uri})\nReason - ${e ? e.error : "No Reason"}`)
                     .setFooter(this.current.requester.username,  this.current.requester.displayAvatarURL({ dynamic: true }))
-                .setTimestamp()] }).then(msg => {if (msg.guild.purge) {setTimeout(() => msg.delete(), 10000);}});
+                    .setTimestamp()] }).then(msg => {if (msg.guild.purge) {setTimeout(() => msg.delete(), 10000);}});
             })
-            .on('closed', async (data) => {
-                console.log(data)
+            .on("closed", async (data) => {
+                console.log(data);
                 if (data.code === 4014) return this.destroy();
             })
             .on("update", ({ state }) => {
                 this.state = state;
-            })
+            })       
             .on("error", (e) => {             
                 this.client.logger.error(e.error);
                 this.destroy();
@@ -250,10 +254,9 @@ module.exports = class MusicHandler {
     }
 
     start() {
-        this.current = null;
         this.player?.playTrack(this.queue[0].track);
     }
-   
+       
 
     pause() {
         if (!this.player?.paused) this.player?.setPaused(true);
@@ -265,8 +268,22 @@ module.exports = class MusicHandler {
 
     skip(to = 1) {
         if (to > 1) {
-            this.queue.unshift(this.queue[to - 1]);
-            this.queue.splice(to, 1);
+            this.shouldAddToPrevious = false;
+            this.previous.unshift(this.current);
+            while (to > 1) {                
+                this.previous.unshift(this.queue.shift());
+                to--;
+            }
+        }
+        if (this.loop === 1 && this.queue[0]) this.shouldSkipCurrent = true;
+        this.player?.stopTrack();
+    }
+    last(to = 1) {
+        this.shouldAddToPrevious = false;
+        this.queue.unshift(this.current);
+        while (to > 0) {                
+            this.queue.unshift(this.previous.shift());
+            to--;
         }
         if (this.loop === 1 && this.queue[0]) this.shouldSkipCurrent = true;
         this.player?.stopTrack();

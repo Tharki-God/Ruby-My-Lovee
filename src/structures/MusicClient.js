@@ -5,13 +5,14 @@ const { join } = require("path");
 const { LavasfyClient } = require("lavasfy");
 const http = require("http");
 const Express = require("express");
-
+const Anime_Images = require("anime-images-api");
 
 module.exports = class MusicClient extends Client {
     /** @param {import("discord.js").ClientOptions} [opt] */
     constructor(opt) {
         super(opt);
         this.server = Express();
+        this.image = new Anime_Images();
         this.http = http.createServer(this.server);
         this.server.use("/", require("../api"));   
         this.logger = require("../logger.js"); 
@@ -71,10 +72,10 @@ module.exports = class MusicClient extends Client {
 
         this.shoukaku
             .on("ready", (name, resumed) => this.logger.info(`${name} is now ready.${resumed ? " (Lavalink Reconnected Connection)": "(Lavalink New Connecttion)"}`))
-            .on("disconnect", (name, players, moved) => this.logger.debug(`Lavalink ${name} disconnected.`, moved ? 'players have been moved' : 'players have been disconnected'))
-            .on("close", (name, code, reason) => this.logger.error(`Lavalink ${name} closed. Code: ${code}. Reason: ${reason || 'No reason'}`))
+            .on("disconnect", (name, players, moved) => this.logger.debug(`Lavalink ${name} disconnected.`, moved ? "players have been moved" : "players have been disconnected"))
+            .on("close", (name, code, reason) => this.logger.error(`Lavalink ${name} closed. Code: ${code}. Reason: ${reason || "No reason"}`))
             .on("error", (name, error) => this.logger.error(`Encountered an error in node ${name}.`, error.stack))
-            .on("debug", (name, reason) => this.logger.debug(`${reason || 'No reason'} (${name})`));
+            .on("debug", (name, reason) => this.logger.debug(`${reason || "No reason"} (${name})`));
         
         process.on("unhandledRejection", error => {
             if (error.code == "10008" || error.code == "10062") return;

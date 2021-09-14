@@ -7,8 +7,8 @@ module.exports = {
     description: "Leave Voice Chat.",
     exec: async (ctx) => {
         const { interaction, music } = ctx;
-        if (!music.player?.track) {		
-            interaction.editReply({ embeds:[util.embed().setDescription("❌ | Currently not playing anything.")		
+        if (!ctx.guild.me.voice.channel) {		
+            interaction.editReply({ embeds:[util.embed().setDescription("❌ | Currently not in Any VC.")		
                 .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
                 .setTimestamp()]});
             return; }

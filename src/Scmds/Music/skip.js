@@ -13,7 +13,7 @@ module.exports = {
     description: "Skip to the Next Song in Queue and Plays it Immediately.",
     exec: async (ctx) => {
         const { music, interaction, args } = ctx;
-        const skipTo = args[0] ? parseInt(args[0], 10) : null;		
+        const skipTo = args[0] ? parseInt(args[0], 10) : null;	
         if (!music.player?.track) 
         { interaction.editReply({ embeds: [util.embed().setDescription("❌ | Currently not playing anything.")		
             .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
@@ -29,12 +29,20 @@ module.exports = {
             .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
             .setTimestamp()] });
         return;}
-        if (skipTo !== null && (isNaN(skipTo) || skipTo < 1 || skipTo > music.queue.length))
+        if (skipTo !== null && (isNaN(skipTo) || skipTo < 1 || skipTo > (music.queue.length + music.previous.length)))
         { interaction.editReply({ embeds: [util.embed().setDescription("❌ | Invalid number to Skip.")			
             .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
             .setTimestamp()] });return;}
+        if (skipTo !== null && skipTo < (1 + music.previous.length))
+        { interaction.editReply({ embeds: [util.embed().setDescription("❌ | Use Previous Command to play songs before current track.")			
+            .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
+            .setTimestamp()] });return;}
+        if (skipTo === (1 + music.previous.length))
+        { interaction.editReply({ embeds: [util.embed().setDescription("❌ | You Can't Skip to the Current Song.")			
+            .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
+            .setTimestamp()] });return;}
         try {
-            await music.skip(skipTo);          
+            await music.skip(skipTo - (music.previous.length + 1));          
             interaction.editReply({embeds: [util.embed().setDescription("⏭️ | Skipped")]});
         } catch (e) {
             ctx.client.logger.error(`An error occured: ${e.message}.`);

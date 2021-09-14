@@ -13,7 +13,7 @@ module.exports = {
         if (!music.player?.track) return ctx.channel.send({ embeds: [util.embed().setDescription("❌ | Currently not playing anything.")		
             .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
             .setTimestamp()] }).then(msg => {if (msg.guild.purge) {setTimeout(() => msg.delete(), 10000);}});
-        if (!music.queue.length) return ctx.channel.send({ embeds: [util.embed().setDescription("❌ | Queue is empty.")		
+        if (!music.queue.length && !music.previous.length) return ctx.channel.send({ embeds: [util.embed().setDescription("❌ | Queue is empty.")		
             .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
             .setTimestamp()] }).then(msg => {if (msg.guild.purge) {setTimeout(() => msg.delete(), 10000);}});
 
@@ -35,12 +35,22 @@ module.exports = {
             .setTimestamp()]}).then(msg => {if (msg.guild.purge) {setTimeout(() => msg.delete(), 10000);}});
 
         let iToRemove = parseInt(args[0], 10);
-        if (isNaN(iToRemove) || iToRemove < 1 || iToRemove > music.queue.length)
+        if (isNaN(iToRemove) || iToRemove < 1 || iToRemove > (music.queue.length + music.previous.length))
             return ctx.channel.send({ embeds: [util.embed().setDescription("❌ | Invalid number to remove.")			
                 .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
                 .setTimestamp()] }).then(msg => {if (msg.guild.purge) {setTimeout(() => msg.delete(), 10000);}});
 
-        const removed = music.queue.splice(--iToRemove, 1)[0];
+        if (iToRemove <= (music.previous.length))
+            return ctx.channel.send({ embeds: [util.embed().setDescription("❌ | You can not Remove already Played Songs.")			
+                .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
+                .setTimestamp()]}).then(msg => {if (msg.guild.purge) {setTimeout(() => msg.delete(), 10000);}});
+
+        if (iToRemove === (music.previous.length + 1))
+            return ctx.channel.send({ embeds: [util.embed().setDescription("❌ | You can not Remove Current Song Songs.")			
+                .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
+                .setTimestamp()] }).then(msg => {if (msg.guild.purge) {setTimeout(() => msg.delete(), 10000);}});
+
+        const removed = music.queue.splice((--iToRemove - (music.previous.length + 1)), 1)[0];
         ctx.channel.send({ embeds: [util.embed().setDescription(`✅ | Removed **${removed.info.title}** from the queue.`)		
             .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
             .setTimestamp()]}).then(msg => {if (msg.guild.purge) {setTimeout(() => msg.delete(), 15000);}});

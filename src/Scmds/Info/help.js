@@ -1,6 +1,7 @@
 const util = require("../../util");
 const fs = require("fs");
 const unlisted = ["eval", "clear", "nick", "join", "rickroll"];
+const { MessageButton, MessageActionRow} = require("discord.js");
 module.exports = {
     name: "help",
     level: "Info",
@@ -64,9 +65,9 @@ module.exports = {
             const commandName = command;
             const cmd = ctx.client.cmds.get(commandName) || ctx.client.cmds.find(c => c.aliases && c.aliases.includes(commandName));
             if (!cmd)             
-                return interaction.editReply(util.embed().setDescription("❌ | Provide a Valid Command For Detailed help.")			
+                return interaction.editReply({embeds:[util.embed().setDescription("❌ | Provide a Valid Command For Detailed help.")			
                     .setFooter(ctx.author.username,  ctx.author.displayAvatarURL({ dynamic: true }))
-                    .setTimestamp());		
+                    .setTimestamp()]});		
             else if (
                 cmd 
             ) {const scmd = util.embed()
@@ -78,10 +79,52 @@ module.exports = {
             if (cmd.usage) scmd.addField("Usage", `\`${prefix.toUpperCase()}${cmd.usage.toUpperCase()}\``, true);
             if (cmd.aliases) scmd.addField("Aliases", cmd.aliases.map(c => `\`${c}\``).join(" ").toUpperCase());
             if (cmd.examples) scmd.addField("Examples", cmd.examples.map(c => `\`${prefix.toUpperCase()}${c}\``).join("\n").toUpperCase());
-            interaction.editReply({embeds:[scmd]});
+            interaction.editReply({embeds:[scmd],
+                components:
+                [
+                    new MessageActionRow()
+                        .addComponents(
+                            new MessageButton()
+                                .setURL("https://discord.com/api/oauth2/authorize?client_id=843201958173212783&permissions=100003009&scope=bot%20applications.commands")
+                                .setLabel("Invite Bot")
+                                .setEmoji("🎊")
+                                .setStyle("LINK"),
+                            new MessageButton()
+                                .setURL("https://discord.com/invite/cDE6Trv8yM")
+                                .setLabel("Support Server")
+                                .setEmoji("🆘")
+                                .setStyle("LINK"),
+                            new MessageButton()
+                                .setURL("https://top.gg/bot/843201958173212783/vote/")
+                                .setLabel("Top.gg Vote")
+                                .setEmoji("❎")
+                                .setStyle("LINK"),
+                        )
+                ]});
             return;}}
         
                  
-        interaction.editReply({embeds:[embed]});    
+        interaction.editReply({embeds:[embed],
+            components:
+                     [
+                         new MessageActionRow()
+                             .addComponents(
+                                 new MessageButton()
+                                     .setURL("https://discord.com/api/oauth2/authorize?client_id=843201958173212783&permissions=100003009&scope=bot%20applications.commands")
+                                     .setLabel("Invite Bot")
+                                     .setEmoji("🎊")
+                                     .setStyle("LINK"),
+                                 new MessageButton()
+                                     .setURL("https://discord.com/invite/cDE6Trv8yM")
+                                     .setLabel("Support Server")
+                                     .setEmoji("🆘")
+                                     .setStyle("LINK"),
+                                 new MessageButton()
+                                     .setURL("https://top.gg/bot/843201958173212783/vote/")
+                                     .setLabel("Top.gg Vote")
+                                     .setEmoji("❎")
+                                     .setStyle("LINK"),
+                             )
+                     ]});    
     }
 };
