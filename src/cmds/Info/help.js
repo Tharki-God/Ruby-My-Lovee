@@ -1,6 +1,6 @@
 const util = require("../../util");
 const fs = require("fs");
-
+const { MessageButton, MessageActionRow} = require("discord.js");
 const unlisted = ["eval", "clear", "nick", "join", "rickroll"];
 
 module.exports = {
@@ -92,8 +92,50 @@ module.exports = {
                     if (command.usage) cmd.addField("Usage", `\`${prefix.toUpperCase()}${command.usage.toUpperCase()}\``, true);
                     if (command.aliases) cmd.addField("Aliases",command.aliases.map(c => `\`${c}\``).join(" ").toUpperCase());
                     if (command.examples) cmd.addField("Examples",command.examples.map(c => `\`${prefix.toUpperCase()}${c}\``).join("\n").toUpperCase());
-                    ctx.author.send({embeds:[cmd]});}
-                } else ctx.author.send({embeds:[embed]});
+                    ctx.author.send({embeds:[cmd],
+                        components:
+                                 [
+                                     new MessageActionRow()
+                                         .addComponents(
+                                             new MessageButton()
+                                                 .setURL("https://discord.com/api/oauth2/authorize?client_id=843201958173212783&permissions=100003009&scope=bot%20applications.commands")
+                                                 .setLabel("Invite Bot")
+                                                 .setEmoji("🎊")
+                                                 .setStyle("LINK"),
+                                             new MessageButton()
+                                                 .setURL("https://discord.com/invite/cDE6Trv8yM")
+                                                 .setLabel("Support Server")
+                                                 .setEmoji("🆘")
+                                                 .setStyle("LINK"),
+                                             new MessageButton()
+                                                 .setURL("https://top.gg/bot/843201958173212783/vote/")
+                                                 .setLabel("Top.gg Vote")
+                                                 .setEmoji("❎")
+                                                 .setStyle("LINK"),
+                                         )
+                                 ]});}
+                } else ctx.author.send({embeds:[embed],
+                    components:
+                             [
+                                 new MessageActionRow()
+                                     .addComponents(
+                                         new MessageButton()
+                                             .setURL("https://discord.com/api/oauth2/authorize?client_id=843201958173212783&permissions=100003009&scope=bot%20applications.commands")
+                                             .setLabel("Invite Bot")
+                                             .setEmoji("🎊")
+                                             .setStyle("LINK"),
+                                         new MessageButton()
+                                             .setURL("https://discord.com/invite/cDE6Trv8yM")
+                                             .setLabel("Support Server")
+                                             .setEmoji("🆘")
+                                             .setStyle("LINK"),
+                                         new MessageButton()
+                                             .setURL("https://top.gg/bot/843201958173212783/vote/")
+                                             .setLabel("Top.gg Vote")
+                                             .setEmoji("❎")
+                                             .setStyle("LINK"),
+                                     )
+                             ]});
                 return;}
             const commandName = args.shift().toLowerCase();
             const command = ctx.client.cmds.get(commandName) || ctx.client.cmds.find(c => c.aliases && c.aliases.includes(commandName));
@@ -112,9 +154,51 @@ module.exports = {
             if (command.usage) cmd.addField("Usage", `\`${prefix.toUpperCase()}${command.usage.toUpperCase()}\``, true);
             if (command.aliases) cmd.addField("Aliases", command.aliases.map(c => `\`${c}\``).join(" ").toUpperCase());
             if (command.examples) cmd.addField("Examples", command.examples.map(c => `\`${prefix.toUpperCase()}${c}\``).join("\n").toUpperCase());
-            ctx.channel.send({embeds:[cmd]}).then(msg => {if (msg.guild.purge) {setTimeout(() => msg.delete(), 30000);}});}
+            ctx.channel.send({embeds:[cmd],
+                components:
+                         [
+                             new MessageActionRow()
+                                 .addComponents(
+                                     new MessageButton()
+                                         .setURL("https://discord.com/api/oauth2/authorize?client_id=843201958173212783&permissions=100003009&scope=bot%20applications.commands")
+                                         .setLabel("Invite Bot")
+                                         .setEmoji("🎊")
+                                         .setStyle("LINK"),
+                                     new MessageButton()
+                                         .setURL("https://discord.com/invite/cDE6Trv8yM")
+                                         .setLabel("Support Server")
+                                         .setEmoji("🆘")
+                                         .setStyle("LINK"),
+                                     new MessageButton()
+                                         .setURL("https://top.gg/bot/843201958173212783/vote/")
+                                         .setLabel("Top.gg Vote")
+                                         .setEmoji("❎")
+                                         .setStyle("LINK"),
+                                 )
+                         ]}).then(msg => {if (msg.guild.purge) {setTimeout(() => msg.delete(), 30000);}});}
             return;
         }          
-        ctx.channel.send({embeds:[embed]}).then(msg => {if (msg.guild.purge) {setTimeout(() => msg.delete(), 30000);}});    
+        ctx.channel.send({embeds:[embed],
+            components:
+                     [
+                         new MessageActionRow()
+                             .addComponents(
+                                 new MessageButton()
+                                     .setURL("https://discord.com/api/oauth2/authorize?client_id=843201958173212783&permissions=100003009&scope=bot%20applications.commands")
+                                     .setLabel("Invite Bot")
+                                     .setEmoji("🎊")
+                                     .setStyle("LINK"),
+                                 new MessageButton()
+                                     .setURL("https://discord.com/invite/cDE6Trv8yM")
+                                     .setLabel("Support Server")
+                                     .setEmoji("🆘")
+                                     .setStyle("LINK"),
+                                 new MessageButton()
+                                     .setURL("https://top.gg/bot/843201958173212783/vote/")
+                                     .setLabel("Top.gg Vote")
+                                     .setEmoji("❎")
+                                     .setStyle("LINK"),
+                             )
+                     ]}).then(msg => {if (msg.guild.purge) {setTimeout(() => msg.delete(), 30000);}});    
     }
 };

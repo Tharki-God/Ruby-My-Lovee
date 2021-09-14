@@ -50,11 +50,9 @@ module.exports = {
 			
         try {
             const { tracks } = await music.load("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
-            music.queue = [];
-            music.loop = 0;
             const track = tracks[0];
             track.requester = ctx.author;
-            music.queue.push(track);  
+            music.queue.unshift(track);  
             await music.skip();
             if (!music.player) await music.join(ctx.member.voice.channel);
             if (!music.player.track) {

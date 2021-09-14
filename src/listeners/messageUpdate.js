@@ -8,13 +8,13 @@ module.exports = {
     exec: async (client, oldMessage, newMessage) => {   
         if (newMessage.member && newMessage.Id === newMessage.member.lastMessageId) 
         {     if (!newMessage.guild || newMessage.author.bot || newMessage.webhookId) return;
-            if (!newMessage.channel.permissionsFor(newMessage.guild.me).has('SEND_MESSAGES')) return;
-            if (!newMessage.channel.guild) return newMessage.reply({ content: 'I can\'t execute commands inside DMs! Please run this command in a server.', allowedMentions: { repliedUser: false } }).catch(() => {return null;});;
-            if (newMessage.channel.type === 'DM') {
+            if (!newMessage.channel.permissionsFor(newMessage.guild.me).has("SEND_MESSAGES")) return;
+            if (!newMessage.channel.guild) return newMessage.reply({ content: "I can't execute commands inside DMs! Please run this command in a server.", allowedMentions: { repliedUser: false } }).catch(() => {return null;});
+            if (newMessage.channel.type === "DM") {
                 let embed = util.embed()
-                    .setColor('RED')
-                    .setDescription('This command can only be run in a server!');
-                return newMessage.reply({ embeds: [embed], allowedMentions: { repliedUser: false } }).catch(() => {return null;});;
+                    .setColor("RED")
+                    .setDescription("This command can only be run in a server!");
+                return newMessage.reply({ embeds: [embed], allowedMentions: { repliedUser: false } }).catch(() => {return null;});
             }
             let channels = JSON.parse(fs.readFileSync("./database/channels.json", "utf8"));
             if (channels[newMessage.guild.id] && channels[newMessage.guild.id].channel && newMessage.guild.channels.cache.get(channels[newMessage.guild.id].channel) !== undefined && newMessage.channel.id !== channels[newMessage.guild.id].channel) return;
@@ -36,10 +36,10 @@ module.exports = {
                 };
             }
             newMessage.guild.purge = purge[newMessage.guild.id].status;
-            if (newMessage.guild.purge && !newMessage.channel.permissionsFor(newMessage.guild.me).has('MANAGE_MESSAGES')) {
-                newMessage.channel.send({ content: "Purge is On for Guild, Please give me Manage message Perms so I can execute the purge when needed.", allowedMentions: { repliedUser: false } })
-                newMessage.guild.purge = false
-                        }
+            if (newMessage.guild.purge && !newMessage.channel.permissionsFor(newMessage.guild.me).has("MANAGE_MESSAGES")) {
+                newMessage.channel.send({ content: "Purge is On for Guild, Please give me Manage message Perms so I can execute the purge when needed.", allowedMentions: { repliedUser: false } });
+                newMessage.guild.purge = false;
+            }
             let prefix  = prefixes[newMessage.guild.id].prefix;
             const senpai = `<@!${client.user.id}>`;
             const yametee = newMessage.content.toLowerCase().startsWith(prefix) ? prefix : senpai;
@@ -53,7 +53,7 @@ module.exports = {
             const cmd = client.cmds.get(cmdName) || client.cmds.find(c => c.aliases && c.aliases.includes(cmdName));	
         
             if (cmd) {
-                if (!newMessage.channel.permissionsFor(newMessage.guild.me).has('EMBED_LINKS')) return newMessage.channel.send({ content: 'I can\'t execute commands With these perms! Ask someone to Get me Embed Link Perms in this channel so That I use this command here.', allowedMentions: { repliedUser: false } });
+                if (!newMessage.channel.permissionsFor(newMessage.guild.me).has("EMBED_LINKS")) return newMessage.channel.send({ content: "I can't execute commands With these perms! Ask someone to Get me Embed Link Perms in this channel so That I use this command here.", allowedMentions: { repliedUser: false } });
                 if (newMessage.author.id !== process.env.OWNER_ID){
                     if(!cooldowns.has(cmd.name)){
                         cooldowns.set(cmd.name, new Collection());
